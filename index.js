@@ -42,7 +42,7 @@ client.on("message", (message) => {
     } else if (message.content.startsWith("exec ")) {
       execute(message);
     } else if (message.content === "status") {
-      pingAmongUs(message);
+      Status(message);
     }
   }
 });
@@ -73,16 +73,22 @@ function execute(message) {
   });
 }
 
-// Ping among us command
-function pingAmongUs(message) {
-  child_process.exec("ping ${config.ipAddress} -c 1", (err, stdout) => {
+// Status command
+function Status(message) {
+  child_process.exec("ping " + config.ipAddress + " -c 1", (err, stdout) => {
     if (err) {
       message.channel.send(err);
     } else {
-      message.channel.send(stdout);
+      const response = stdout.trim();
+      if (response) {
+        message.channel.send(response);
+      } else {
+        message.channel.send("No response. PC is offline.");
+      }
     }
   });
 }
+
 
 // Clean text for discord markdown
 function cleanText(text) {
